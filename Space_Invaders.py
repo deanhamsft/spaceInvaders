@@ -63,10 +63,11 @@ WHITE = (255, 255, 255)
 DIMENSIONS = (640, 480)
 RADS = 0
 ALIENS_FORMATION = {
-    'resources\images\InvaderA.png': [220, 60], 
-    'resources\images\InvaderB.png': [225, 100], 
-    'resources\images\InvaderC.png': [220, 140]
+    'resources\\images\\InvaderA.png': [220, 60], 
+    'resources\\images\\InvaderB.png': [225, 100], 
+    'resources\\images\\InvaderC.png': [220, 140]
     }
+SHOTS = []
 
 pygame.init()
 
@@ -93,7 +94,7 @@ shot = Shot()
 shot.rect = player.rect
 shot_group.add(shot)
 
-keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_space: False }
+keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_SPACE: False }
 
 score_font = pygame.font.SysFont("monospace", 15)
 
@@ -115,17 +116,14 @@ while True:
     elif keys_pressed[pygame.K_d]:
         Move.move_right(player)
     elif keys_pressed[pygame.K_SPACE]:
-        Move.move_up(shot)
+        position = player.get.get_position()
+        SHOTS.append([position[0], position[1]])
 
     aliens_hit_list = pygame.sprite.spritecollide(player, all_aliens, True)
     for alien in aliens_hit_list:
         player.score += alien.score
         alien.kill()
     
-    #if football:
-        #football.update()
-
-
     screen.fill(WHITE)
 
     all_aliens.draw(screen)
