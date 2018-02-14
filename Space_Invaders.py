@@ -36,11 +36,11 @@ class Fire_Path():
         pass
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self, image_name, Offence):
+    def __init__(self, image_name, Value):
         super().__init__()
         self.image = pygame.image.load(image_name).convert_alpha()
         self.rect = self.image.get_rect()
-        self.score = Offence
+        self.score = Value
 
 class PlayerShip(pygame.sprite.Sprite):
     def __init__(self):
@@ -80,19 +80,18 @@ target_group = pygame.sprite.Group()
 shot_group = pygame.sprite.Group()
 
 for v in ALIENS_FORMATION.items():
-    alien = Alien(v[0], -10)
-    alien.rect.x = v[1][0]
-    alien.rect.y = v[1][1]
-    all_aliens.add(alien)
+    for i in range(5):
+        alien = Alien(v[0], -10)
+        alien.rect.x = v[1][0] + (50 * i)
+        alien.rect.y = v[1][1]
+        all_aliens.add(alien)
 
 player = PlayerShip()
 player.rect.x = 285
 player.rect.y = 300
 player_goup.add(player)
 
-shot = Shot()
-shot.rect = player.rect
-shot_group.add(shot)
+
 
 keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_SPACE: False }
 
@@ -116,20 +115,26 @@ while True:
     elif keys_pressed[pygame.K_d]:
         Move.move_right(player)
     elif keys_pressed[pygame.K_SPACE]:
-        position = player.get.get_position()
-        SHOTS.append([position[0], position[1]])
+        shot = Shot()
+        shot.rect.x = player.rect.x + 25
+        shot.rect.y = player.rect.y 
+        shot_group.add(shot)
 
     aliens_hit_list = pygame.sprite.spritecollide(player, all_aliens, True)
     for alien in aliens_hit_list:
         player.score += alien.score
         alien.kill()
     
+    for shot in shot_group:
+        Move.move_up(shot)
+
     screen.fill(WHITE)
 
     all_aliens.draw(screen)
     all_offence.draw(screen)
     player_goup.draw(screen)
     target_group.draw(screen)
+    shot_group.draw(screen)
 
     score_label = score_font.render("Score: {}".format(player.score), 1, WHITE)
     screen.blit(score_label, ((DIMENSIONS[0] / 2) - score_label.get_rect().width / 2, 10))
