@@ -50,6 +50,9 @@ class Alien(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.score = Value
 
+    def Drop(self):
+        self.rect.y += 10
+
     def update(self):
         '''This method iterates through the elements inside self.images and 
         displays the next one each tick. For a slower animation, you may want to 
@@ -58,6 +61,22 @@ class Alien(pygame.sprite.Sprite):
         if self.index >= len(self.images):
             self.index = 0
         self.image = self.images[self.index]
+
+        if self.rect.x >= 630:
+            MARCH_RIGHT == False
+            self.Drop()
+        elif self.rect.x <= 10:
+            MARCH_RIGHT == True
+            self.Drop()
+
+        if MARCH_RIGHT == True:
+            self.rect.x += 20
+        else:
+            self.rect.x -= 20
+
+        time_to_wait = 100
+
+        
 
 class PlayerShip(pygame.sprite.Sprite):
     def __init__(self):
@@ -85,6 +104,8 @@ ALIENS_FORMATION = [
     ['resources\\images\\InvaderC.png', 'resources\\images\\InvaderC1.png', [220, 140]]
 ]
 SHOTS = []
+MARCH_RIGHT = True
+time_to_wait = 100
 
 pygame.init()
 
@@ -110,7 +131,7 @@ player_goup.add(player)
 
 
 
-keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_SPACE: True }
+keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_SPACE: True, pygame.K_RIGHT: False, pygame.K_LEFT: False }
 
 score_font = pygame.font.SysFont("monospace", 15)
 
@@ -127,9 +148,9 @@ while True:
             if event.key in keys_pressed:
                 keys_pressed[event.key] = False
 
-    if keys_pressed[pygame.K_a]:
+    if keys_pressed[pygame.K_a] or keys_pressed[pygame.K_LEFT]:
         Move.move_left(player)
-    elif keys_pressed[pygame.K_d]:
+    elif keys_pressed[pygame.K_d] or keys_pressed[pygame.K_RIGHT]:
         Move.move_right(player)
     elif not keys_pressed[pygame.K_SPACE]:
         shot = Shot()
@@ -145,6 +166,12 @@ while True:
             player.score += alien.score
             alien.kill()
             shot.kill()
+
+    for alien in all_aliens:
+        if time_to_wait == 0:
+            alien.update()
+
+    time_to_wait -= 1
 
     screen.fill(WHITE)
 
