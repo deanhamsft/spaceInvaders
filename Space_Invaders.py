@@ -126,7 +126,7 @@ for v in ALIENS_FORMATION:
 
 player = PlayerShip()
 player.rect.x = 285
-player.rect.y = 300
+player.rect.y = 380
 player_goup.add(player)
 
 
