@@ -24,6 +24,10 @@ class Move():
         self.rect.x += 1
         pass
 
+def load_image(name):
+    image = pygame.image.load(name).convert_alpha()
+    return image
+
 class Fire_Path():
     def __init__(self):
         pass
@@ -36,11 +40,24 @@ class Fire_Path():
         pass
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self, image_name, Value):
+    def __init__(self, image_name1, image_name2, Value):
         super().__init__()
-        self.image = pygame.image.load(image_name).convert_alpha()
+        self.images = []
+        self.index = 0
+        self.images.append(load_image(image_name1))
+        self.images.append(load_image(image_name2))
+        self.image = self.images[self.index]
         self.rect = self.image.get_rect()
         self.score = Value
+
+    def update(self):
+        '''This method iterates through the elements inside self.images and 
+        displays the next one each tick. For a slower animation, you may want to 
+        consider using a timer of some sort so it updates slower.'''
+        self.index += 1
+        if self.index >= len(self.images):
+            self.index = 0
+        self.image = self.images[self.index]
 
 class PlayerShip(pygame.sprite.Sprite):
     def __init__(self):
@@ -62,11 +79,11 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 DIMENSIONS = (640, 480)
 RADS = 0
-ALIENS_FORMATION = {
-    'resources\\images\\InvaderA.png': [220, 60], 
-    'resources\\images\\InvaderB.png': [225, 100], 
-    'resources\\images\\InvaderC.png': [220, 140]
-    }
+ALIENS_FORMATION = [
+    ['resources\\images\\InvaderA.png', 'resources\\images\\InvaderA1.png', [220, 60]],
+    ['resources\\images\\InvaderB.png', 'resources\\images\\InvaderB1.png', [225, 100]], 
+    ['resources\\images\\InvaderC.png', 'resources\\images\\InvaderC1.png', [220, 140]]
+]
 SHOTS = []
 
 pygame.init()
@@ -79,11 +96,11 @@ player_goup = pygame.sprite.Group()
 target_group = pygame.sprite.Group()
 shot_group = pygame.sprite.Group()
 
-for v in ALIENS_FORMATION.items():
+for v in ALIENS_FORMATION:
     for i in range(5):
-        alien = Alien(v[0], -10)
-        alien.rect.x = v[1][0] + (50 * i)
-        alien.rect.y = v[1][1]
+        alien = Alien(v[0], v[1], 10)
+        alien.rect.x = v[2][0] + (50 * i)
+        alien.rect.y = v[2][1]
         all_aliens.add(alien)
 
 player = PlayerShip()
