@@ -4,6 +4,8 @@ import random
 import time
 import math
 
+TIME_TO_WAIT = 100
+
 class Move():
     def __init__(self):
         pass
@@ -58,25 +60,25 @@ class Alien(pygame.sprite.Sprite):
         displays the next one each tick. For a slower animation, you may want to 
         consider using a timer of some sort so it updates slower.'''
         self.index += 1
+
+        global MARCH_RIGHT 
+        global TIME_TO_WAIT
+
         if self.index >= len(self.images):
             self.index = 0
         self.image = self.images[self.index]
 
-        if self.rect.x >= 630:
-            MARCH_RIGHT == False
+        if self.rect.x >= 600:
+            MARCH_RIGHT = False
             self.Drop()
         elif self.rect.x <= 10:
-            MARCH_RIGHT == True
+            MARCH_RIGHT = True
             self.Drop()
 
         if MARCH_RIGHT == True:
             self.rect.x += 20
         else:
-            self.rect.x -= 20
-
-        time_to_wait = 100
-
-        
+            self.rect.x -= 20        
 
 class PlayerShip(pygame.sprite.Sprite):
     def __init__(self):
@@ -105,7 +107,6 @@ ALIENS_FORMATION = [
 ]
 SHOTS = []
 MARCH_RIGHT = True
-time_to_wait = 100
 
 pygame.init()
 
@@ -167,11 +168,16 @@ while True:
             alien.kill()
             shot.kill()
 
+    alien_count = len(all_aliens.sprites()) - 1
     for alien in all_aliens:
-        if time_to_wait == 0:
+        if TIME_TO_WAIT <= 0 and alien_count >= 0:
+            alien_count -= 1
             alien.update()
 
-    time_to_wait -= 1
+        if TIME_TO_WAIT <= 0 and alien_count <= 0:
+            TIME_TO_WAIT = 100
+
+    TIME_TO_WAIT -= 1
 
     screen.fill(WHITE)
 
