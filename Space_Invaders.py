@@ -110,7 +110,7 @@ player_goup.add(player)
 
 
 
-keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_SPACE: False }
+keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_SPACE: True }
 
 score_font = pygame.font.SysFont("monospace", 15)
 
@@ -131,19 +131,20 @@ while True:
         Move.move_left(player)
     elif keys_pressed[pygame.K_d]:
         Move.move_right(player)
-    elif keys_pressed[pygame.K_SPACE]:
+    elif not keys_pressed[pygame.K_SPACE]:
         shot = Shot()
         shot.rect.x = player.rect.x + 25
         shot.rect.y = player.rect.y 
         shot_group.add(shot)
+        keys_pressed[pygame.K_SPACE] = True
 
-    aliens_hit_list = pygame.sprite.spritecollide(player, all_aliens, True)
-    for alien in aliens_hit_list:
-        player.score += alien.score
-        alien.kill()
-    
     for shot in shot_group:
         Move.move_up(shot)
+        aliens_hit_list = pygame.sprite.spritecollide(shot, all_aliens, True)
+        for alien in aliens_hit_list:
+            player.score += alien.score
+            alien.kill()
+            shot.kill()
 
     screen.fill(WHITE)
 
