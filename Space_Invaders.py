@@ -5,6 +5,7 @@ import time
 import math
 
 TIME_TO_WAIT = 100
+DROP_ALL = False
 
 class Move():
     def __init__(self):
@@ -64,6 +65,7 @@ class Alien(pygame.sprite.Sprite):
         self.index += 1
 
         global MARCH_RIGHT 
+        global DROP_ALL
 
         if self.index >= len(self.images):
             self.index = 0
@@ -71,10 +73,10 @@ class Alien(pygame.sprite.Sprite):
 
         if self.rect.x >= 600 and MARCH_RIGHT == True:
             MARCH_RIGHT = False
-            self.Drop()
+            DROP_ALL = True
         elif self.rect.x <= 10 and MARCH_RIGHT == False:
             MARCH_RIGHT = True
-            self.Drop()
+            DROP_ALL = True
 
         if MARCH_RIGHT == True:
             self.rect.x += 20
@@ -174,9 +176,12 @@ while True:
         if TIME_TO_WAIT <= 0 and alien_count >= 0:
             alien_count -= 1
             alien.update()
+            if DROP_ALL:
+                alien.Drop()
 
         if TIME_TO_WAIT <= 0 and alien_count <= 0:
             TIME_TO_WAIT = 100
+            DROP_ALL = False
 
     TIME_TO_WAIT -= 1
 
