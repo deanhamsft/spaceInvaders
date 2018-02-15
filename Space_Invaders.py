@@ -19,12 +19,14 @@ class Move():
         pass
 
     def move_left(self):
-        self.rect.x -= 1
-        pass
+        if self.rect.x > 0:
+            self.rect.x -= 1
+            pass
 
     def move_right(self):
-        self.rect.x += 1
-        pass
+        if self.rect.x < 590:
+            self.rect.x += 1
+            pass
 
 def load_image(name):
     image = pygame.image.load(name).convert_alpha()
@@ -62,16 +64,15 @@ class Alien(pygame.sprite.Sprite):
         self.index += 1
 
         global MARCH_RIGHT 
-        global TIME_TO_WAIT
 
         if self.index >= len(self.images):
             self.index = 0
         self.image = self.images[self.index]
 
-        if self.rect.x >= 600:
+        if self.rect.x >= 600 and MARCH_RIGHT == True:
             MARCH_RIGHT = False
             self.Drop()
-        elif self.rect.x <= 10:
+        elif self.rect.x <= 10 and MARCH_RIGHT == False:
             MARCH_RIGHT = True
             self.Drop()
 
@@ -168,7 +169,7 @@ while True:
             alien.kill()
             shot.kill()
 
-    alien_count = len(all_aliens.sprites()) - 1
+    alien_count = len(all_aliens.sprites())
     for alien in all_aliens:
         if TIME_TO_WAIT <= 0 and alien_count >= 0:
             alien_count -= 1
@@ -187,7 +188,7 @@ while True:
     target_group.draw(screen)
     shot_group.draw(screen)
 
-    score_label = score_font.render("Score: {}".format(player.score), 1, WHITE)
+    score_label = score_font.render("Score: {}".format(player.score), 1, BLACK)
     screen.blit(score_label, ((DIMENSIONS[0] / 2) - score_label.get_rect().width / 2, 10))
 
     pygame.display.flip()
