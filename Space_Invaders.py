@@ -176,7 +176,8 @@ while True:
         if TIME_TO_WAIT <= 0 and alien_count >= 0:
             alien_count -= 1
             alien.update()
-            if DROP_ALL:
+        if DROP_ALL and alien_count <= 0:
+            for alien in all_aliens:
                 alien.Drop()
 
         if TIME_TO_WAIT <= 0 and alien_count <= 0:
