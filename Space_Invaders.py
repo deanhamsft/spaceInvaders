@@ -33,17 +33,6 @@ def load_image(name):
     image = pygame.image.load(name).convert_alpha()
     return image
 
-class Fire_Path():
-    def __init__(self):
-        pass
-
-    def artilery(self, playership):
-        velx=math.cos(playership.rect.x) * 10
-        vely=math.sin(playership.rect.y) * 10
-        playership.rect.x += velx
-        playership.rect.y += vely
-        pass
-
 class Alien(pygame.sprite.Sprite):
     def __init__(self, image_name1, image_name2, Value):
         super().__init__()
@@ -110,7 +99,7 @@ ALIENS_FORMATION = [
 ]
 SHOTS = []
 MARCH_RIGHT = True
-
+PLAYING_GAME = True
 pygame.init()
 
 pygame.mouse.set_visible ( False ) 
@@ -138,8 +127,9 @@ player_goup.add(player)
 keys_pressed = { pygame.K_w: False, pygame.K_a: False, pygame.K_s: False, pygame.K_d: False, pygame.K_SPACE: True, pygame.K_RIGHT: False, pygame.K_LEFT: False }
 
 score_font = pygame.font.SysFont("monospace", 15)
+winner_font = pygame.font.SysFont("monospace", 75)
 
-while True:
+while PLAYING_GAME:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -196,5 +186,9 @@ while True:
 
     score_label = score_font.render("Score: {}".format(player.score), 1, BLACK)
     screen.blit(score_label, ((DIMENSIONS[0] / 2) - score_label.get_rect().width / 2, 10))
+    if len(all_aliens.sprites()) == 0:
+        winner_label = winner_font.render("WINNER", 1, BLACK)
+        screen.blit(winner_label, ((DIMENSIONS[0]/2 - winner_label.get_rect().width /2, 10)))
+        # PLAYING_GAME = False
 
     pygame.display.flip()
