@@ -171,7 +171,7 @@ while PLAYING_GAME:
                 alien.Drop()
 
         if TIME_TO_WAIT <= 0 and alien_count <= 0:
-            TIME_TO_WAIT = 100
+            TIME_TO_WAIT = 200
             DROP_ALL = False
 
     TIME_TO_WAIT -= 1
