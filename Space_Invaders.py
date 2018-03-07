@@ -1,4 +1,5 @@
 import pygame
+from pygame import sprite
 import sys
 import random
 import time
@@ -6,8 +7,12 @@ import math
 
 TIME_TO_WAIT = 100
 DROP_ALL = False
+SHOTS = []
+MARCH_RIGHT = True
+PLAYING_GAME = True
+pygame.init()
 
-class Move():
+class Move(sprite.Sprite):
     def __init__(self):
         pass
 
@@ -72,14 +77,14 @@ class Alien(pygame.sprite.Sprite):
         else:
             self.rect.x -= 20        
 
-class PlayerShip(pygame.sprite.Sprite):
+class PlayerShip(sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("resources\images\ship.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.score = 0
 
-class Shot(pygame.sprite.Sprite):
+class Shot(sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("resources\images\shotFriendly.png").convert_alpha()
@@ -97,10 +102,7 @@ ALIENS_FORMATION = [
     ['resources\\images\\InvaderB.png', 'resources\\images\\InvaderB1.png', [225, 100]], 
     ['resources\\images\\InvaderC.png', 'resources\\images\\InvaderC1.png', [220, 140]]
 ]
-SHOTS = []
-MARCH_RIGHT = True
-PLAYING_GAME = True
-pygame.init()
+
 
 pygame.mouse.set_visible ( False ) 
 screen = pygame.display.set_mode(DIMENSIONS)
